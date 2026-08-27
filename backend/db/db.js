@@ -2,7 +2,14 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'wod.sqlite');
+// DB_PATH lets production point the sqlite file at a mounted persistent
+// volume (e.g. /app/data/wod.sqlite) that lives OUTSIDE the backend/db
+// code folder — mounting a volume directly on top of backend/db hides
+// db.js/schema.sql themselves (they get shadowed by the empty volume),
+// which crashes the app with MODULE_NOT_FOUND. Falls back to the local
+// file next to this script for dev, same as before.
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'wod.sqlite');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 const db = new Database(dbPath);
 
 // Run schema on startup (safe to re-run — uses IF NOT EXISTS)
