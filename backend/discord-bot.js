@@ -127,4 +127,10 @@ client.on("interactionCreate", async interaction => {
   }
 });
 
-client.login(process.env.DISCORD_BOT_TOKEN);
+// Caught explicitly — this file is now require()'d from server.js so it
+// shares the web server's process. A bad/expired token must not take the
+// whole website down with it; log and keep the site running without the
+// bot's join/leave sync until the token is fixed.
+client.login(process.env.DISCORD_BOT_TOKEN).catch(err => {
+  console.error('Discord bot failed to log in — website will keep running without it:', err.message);
+});

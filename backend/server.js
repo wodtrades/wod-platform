@@ -14,6 +14,18 @@ const adminRoutes = require('./routes/admin');
 const discordRoutes = require('./routes/discord');
 const { grantWeeklyDiscordEntry } = require('./routes/entries');
 
+// Boots the Discord bot (guildMemberAdd/guildMemberRemove listeners + the
+// /verify-order slash command) in this SAME process, so it shares this
+// process's db connection and therefore the same persistent volume as the
+// website — no second Railway service or second volume needed. Requires
+// DISCORD_BOT_TOKEN to be set; logs its own errors and won't crash the web
+// server if Discord login fails.
+if (process.env.DISCORD_BOT_TOKEN) {
+  require('./discord-bot');
+} else {
+  console.warn('DISCORD_BOT_TOKEN not set — Discord bot (auto join/leave entry sync) is disabled.');
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
