@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard | WOD</title>
+<meta name="description" content="See who's leading this week's WOD giveaway entries, and track your own free entry, checklist, and entry history.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="giveaway.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <span>WODTRADES</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/prop-firms">Prop Firms</a>
+      <a href="/giveaways">Giveaways</a>
+      <a href="/referral">Referral</a>
+      <a href="/leaderboard" class="active">Leaderboard</a>
+    </nav>
+    <a href="/auth/discord" class="btn btn-discord nav-cta">
+      <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      Join Discord
+    </a>
+  </div>
+</header>
+
+<!-- ============ SIGNATURE ELEMENT: LOGO CAROUSEL ============ -->
+<!-- Single-card carousel: one firm at a time, cycling through all 3, then loops. -->
+<!-- ============ SIGNATURE ELEMENT: LOGO CAROUSEL ============ -->
+<!-- JS-driven swipe carousel (see logo-carousel.js) — shows one partner
+     firm at a time, swiping to the next every 4s. -->
+<div id="logoCarousel" aria-hidden="true"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Weekly <span class="accent">Leaderboard</span></h1>
+    <p class="hero-sub">See who's leading this week's entries. Connect Discord to track your own.</p>
+  </div>
+</section>
+
+<!-- ============ LEADERBOARD (public — no login required) ============ -->
+<section class="entry-section">
+  <h2>This Week's Leaderboard</h2>
+  <p class="section-sub">Top 10 by total entries this week.</p>
+  <table class="status-table">
+    <thead>
+      <tr><th>Rank</th><th>User</th><th>Entries</th></tr>
+    </thead>
+    <tbody id="leaderboard-body">
+      <tr><td colspan="3" class="muted">Loading…</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ LOGIN GATE (for the personal sections below) ============ -->
+<section id="logged-out-state" class="entry-section">
+  <div class="connect-bar">
+    <div class="connect-bar-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+    </div>
+    <div class="connect-bar-text">
+      Connect Discord to see <strong>your own entries</strong>.
+    </div>
+    <a href="/auth/discord" class="btn promo-cta">Connect Discord</a>
+  </div>
+  <a href="/auth/dev-login" class="dev-login-link center-btn">Dev login (testing only, no APIs needed)</a>
+</section>
+
+<!-- Everything below only shows once a user is logged in (see leaderboard.js) -->
+<div id="logged-in-state" class="hidden">
+
+  <!-- ============ YOUR ENTRIES THIS WEEK ============ -->
+  <section class="entry-section">
+    <h2>Your Entries This Week</h2>
+    <p class="section-sub">Resets every Saturday — <span id="week-label"></span></p>
+    <table class="status-table">
+      <thead>
+        <tr><th>Free</th><th>Orders</th><th>Referrals</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="dash-base">—</td>
+          <td id="dash-orders">—</td>
+          <td id="dash-referrals">—</td>
+          <td><strong id="dash-total">—</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Free Entry checklist now lives on /giveaways, visible to everyone —
+       see giveaways.html + giveaway.js. -->
+
+  <!-- ============ MY ENTRY STATUS ============ -->
+  <section class="entry-section">
+    <h2>Entry Log</h2>
+    <table class="status-table">
+      <thead>
+        <tr><th>Type</th><th>Firm</th><th>Week</th><th>Status</th></tr>
+      </thead>
+      <tbody id="my-entries-body">
+        <tr><td colspan="4" class="muted">Loading…</td></tr>
+      </tbody>
+    </table>
+    <p id="entries-toggle-wrap" class="hidden" style="margin-top: 0.75rem;">
+      <button class="btn btn-secondary btn-sm" id="entries-toggle-btn" onclick="toggleEntriesView()"></button>
+    </p>
+  </section>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <p>&copy; 2026 WODTRADES. All rights reserved · <a href="/legal">Legal</a></p>
+  <p>WOD may earn a commission when you or your referrals purchase using code WOD, at no additional cost to you.<br>Trading futures and evaluation accounts carries substantial risk of loss and is not suitable for everyone — this is not financial advice. See our <a href="/terms">Terms</a> for full disclosures.</p>
+  <div class="footer-socials" id="footer-socials">
+    <a href="/auth/discord"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>Discord</a>
+    <a href="https://www.instagram.com/wodtrades/" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.25" fill="currentColor"/></svg>Instagram</a>
+    <a href="https://www.tiktok.com/@wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0115.54 3h-3.09v12.4a2.592 2.592 0 01-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 004.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>TikTok</a>
+    <a href="https://x.com/wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>
+    <a href="https://www.youtube.com/@wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a2.994 2.994 0 00-2.112-2.12C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.386.521A2.994 2.994 0 00.502 6.186 31.32 31.32 0 000 12a31.32 31.32 0 00.502 5.814 2.994 2.994 0 002.112 2.12c1.881.521 9.386.521 9.386.521s7.505 0 9.386-.521a2.994 2.994 0 002.112-2.12A31.32 31.32 0 0024 12a31.32 31.32 0 00-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>YouTube</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="leaderboard.js"></script>
+<script src="logo-carousel.js" defer></script>
+</body>
+</html>

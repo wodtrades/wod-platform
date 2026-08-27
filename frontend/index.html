@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WOD | Free Futures Community, Prop Firm Deals &amp; Weekly Giveaways</title>
+<meta name="description" content="Join WOD: a free futures trading Discord. Prop firm discounts with code WOD, plus evaluation accounts given away every week.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <span>WODTRADES</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/prop-firms">Prop Firms</a>
+      <a href="/giveaways">Giveaways</a>
+      <a href="/referral">Referral</a>
+      <a href="/leaderboard">Leaderboard</a>
+    </nav>
+    <a href="/auth/discord" class="btn btn-discord nav-cta">
+      <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      Join Discord
+    </a>
+  </div>
+</header>
+
+<!-- ============ SIGNATURE ELEMENT: LOGO CAROUSEL ============ -->
+<!-- Single-card carousel: one firm at a time, cycling through all 3, then loops. -->
+<!-- ============ SIGNATURE ELEMENT: LOGO CAROUSEL ============ -->
+<!-- JS-driven swipe carousel (see logo-carousel.js) — shows one partner
+     firm at a time, swiping to the next every 4s. -->
+<div id="logoCarousel" aria-hidden="true"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>The Ultimate <span class="accent">Trading Hub</span></h1>
+    <p class="hero-sub">Master your trading, save on prop firms, and win weekly giveaways, all inside one Discord.</p>
+    <div class="hero-ctas">
+      <a href="/auth/discord" class="btn btn-primary btn-lg"><svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="height:18px;width:18px;margin-right:0.5rem;flex-shrink:0;"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>Free Discord</a>
+      <a href="/prop-firms" class="btn btn-secondary btn-lg btn-glow">Prop Firm Deals</a>
+    </div>
+    <img src="assets/hero-dashboard-preview.png" alt="WOD dashboard preview — Friday giveaway, leaderboard, and prop firm deals" class="hero-image">
+    <div class="stat-block">
+      <span class="stat-number" id="discord-member-count">—</span>
+      <span class="stat-label">Members</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRADERS BLUE PRINT ============ -->
+<section class="features">
+  <h2>Traders Blue Print</h2>
+  <p class="section-sub">Exclusive discounts, giveaways, and education. Your blueprint for getting funded and winning.</p>
+  <div class="feature-grid grid-3">
+    <div class="feature-card">
+      <h3>Prop Firm Discounts</h3>
+      <p>The biggest discounts on every partner firm. Code <strong style="color: #fff;">WOD</strong> works across every partner.</p>
+      <a href="/prop-firms" class="link-arrow">Browse discounts →</a>
+    </div>
+    <div class="feature-card">
+      <h3>Giveaways</h3>
+      <p>Enter the weekly giveaway for a shot at real evaluation accounts.</p>
+      <a href="/giveaways" class="link-arrow">Enter the giveaway →</a>
+    </div>
+    <div class="feature-card">
+      <h3>Free Education</h3>
+      <p>Trade recaps, risk management, and psychology all free.</p>
+      <a href="https://www.instagram.com/wodtrades/" target="_blank" rel="noopener" class="link-arrow">Watch now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WIN FREE PROP FIRM ACCOUNTS ============ -->
+<section class="giveaway">
+  <h2>Win FREE Prop Firm Accounts</h2>
+  <p class="section-sub">Every week I give away 5+ accounts across my partnered firms.</p>
+
+  <div class="prizes-grid">
+    <div class="prize-card">
+      <img src="assets/lucid-logo.webp" alt="Lucid Trading">
+      <span class="prize-firm">Lucid Evaluations</span>
+      <span class="prize-detail">50K</span>
+    </div>
+    <div class="prize-card">
+      <img src="assets/tradeify-logo.jpg" alt="Tradeify">
+      <span class="prize-firm">Tradeify Evaluations</span>
+      <span class="prize-detail">50K</span>
+    </div>
+    <div class="prize-card">
+      <img src="assets/alphafutures-logo.jpg" alt="Alpha Futures">
+      <span class="prize-firm">Alpha Futures Evaluations</span>
+      <span class="prize-detail">50K</span>
+    </div>
+  </div>
+
+  <div class="how-it-works">
+    <h3>How to enter</h3>
+    <ul class="entry-rules">
+      <li><strong>Free entry</strong> - join the Discord</li>
+      <li><strong>+1 entry</strong> — Purchase 1 eval with code <strong style="color: #fff;">WOD</strong></li>
+      <li>Unlimited entries</li>
+      <li>New winners weekly</li>
+      <li>Giveaway draws in Discord</li>
+    </ul>
+  </div>
+
+  <a href="/giveaways" class="btn btn-primary btn-lg center-btn">Enter the Giveaway</a>
+</section>
+
+<!-- ============ REFER FRIENDS. STACK ENTRIES. ============ -->
+<section class="features">
+  <h2>Refer friends. Stack entries.</h2>
+  <p class="section-sub">Every friend who signs up using your referral link earns you an extra entry into our weekly giveaways. The more friends you refer, the more chances you have to win.</p>
+  <div class="feature-grid grid-3">
+    <div class="feature-card">
+      <h3>Refer &amp; Earn Entries</h3>
+      <p>Refer a friend using your link and get an extra giveaway entry.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Stack Your Entries</h3>
+      <p>Every successful referral adds another entry to your giveaway total.</p>
+    </div>
+    <div class="feature-card">
+      <h3>More Referrals. More Entries.</h3>
+      <p>Send your link to friends and increase your chances of winning.</p>
+    </div>
+  </div>
+  <a href="/referral" class="link-arrow center btn-glow" style="display: block; width: fit-content; margin: 1rem auto 0; border: 1px solid #fff; border-radius: var(--radius); padding: 0.6rem 1.2rem;">Get your referral link →</a>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq">
+  <h2>Frequently asked questions</h2>
+
+  <details class="faq-item">
+    <summary>Who can enter the giveaways?</summary>
+    <p>Anyone can enter for free by joining the Discord and following all my socials. No purchase is required to enter.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How do I earn giveaway entries?</summary>
+    <p>You automatically receive your free entry by joining the Discord. You can earn additional entries by purchasing a qualifying prop firm evaluation using code <strong style="color: #fff;">WOD</strong>.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How many entries can I get?</summary>
+    <p>As many as you want. Every qualifying evaluation purchased with code <strong style="color: #fff;">WOD</strong> gives you another entry, and successful referrals can earn you additional entries.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How do I win a prop firm account?</summary>
+    <p>Giveaways are drawn randomly from all eligible entries. Winners are announced in the free Discord each week and contacted with instructions on claiming their account.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How does Refer &amp; Earn work?</summary>
+    <p>Share your referral link with a friend. When they sign up and complete a qualifying purchase using code <strong style="color: #fff;">WOD</strong>, you receive an additional giveaway entry and your friend gets an entry for using code <strong style="color: #fff;">WOD</strong>.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>When are new winners announced?</summary>
+    <p>New winners are selected every Friday. Giveaway details, winners, and upcoming accounts are announced directly inside the Discord.</p>
+  </details>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <p>&copy; 2026 WODTRADES. All rights reserved · <a href="/legal">Legal</a></p>
+  <div class="footer-socials" id="footer-socials">
+    <a href="/auth/discord"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>Discord</a>
+    <a href="https://www.instagram.com/wodtrades/" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.25" fill="currentColor"/></svg>Instagram</a>
+    <a href="https://www.tiktok.com/@wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0115.54 3h-3.09v12.4a2.592 2.592 0 01-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 004.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>TikTok</a>
+    <a href="https://x.com/wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>
+    <a href="https://www.youtube.com/@wodtrades" target="_blank" rel="noopener"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a2.994 2.994 0 00-2.112-2.12C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.386.521A2.994 2.994 0 00.502 6.186 31.32 31.32 0 000 12a31.32 31.32 0 00.502 5.814 2.994 2.994 0 002.112 2.12c1.881.521 9.386.521 9.386.521s7.505 0 9.386-.521a2.994 2.994 0 002.112-2.12A31.32 31.32 0 0024 12a31.32 31.32 0 00-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>YouTube</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="logo-carousel.js" defer></script>
+</body>
+</html>

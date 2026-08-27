@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WOD Admin — Entry Verification</title>
+<style>
+  :root {
+    --bg: #0A0A0A; --panel: #141414; --border: #2B2B2B;
+    --text: #F5F5F5; --muted: #9B9B9B; --accent: #E5E5E5; --accent-hover: #FFFFFF;
+    --green: #35C48A; --red: #E14F4F;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, Inter, sans-serif; padding: 2rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  #login-box { max-width: 320px; margin: 4rem auto; text-align: center; }
+  input { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 0.6rem; border-radius: 6px; width: 100%; margin-bottom: 0.75rem; }
+  button { background: var(--accent); color: var(--bg); border: 1px solid transparent; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; }
+  button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  button.reject { background: var(--red); color: white; margin-left: 0.5rem; }
+  button.reject:hover { background: var(--red); filter: brightness(1.1); }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  th { color: var(--muted); font-weight: 500; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+  .order-number { font-family: 'IBM Plex Mono', monospace; background: var(--panel); padding: 2px 6px; border-radius: 4px; }
+  .hidden { display: none; }
+  #status-msg { color: var(--muted); margin-top: 1rem; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem; }
+  .panel h2 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+  .panel .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .upload-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .upload-row input[type="file"] { flex: 1; margin-bottom: 0; }
+  .upload-row label { min-width: 110px; font-weight: 600; }
+  .manual-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
+  .manual-row input { margin-bottom: 0; }
+  button.secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  button.secondary:hover { background: transparent; border-color: var(--accent); transform: none; }
+  button.big { padding: 0.9rem 1.5rem; font-size: 1rem; }
+  #reconcile-report { margin-top: 1rem; }
+  #reconcile-report .summary { font-size: 1rem; margin-bottom: 0.75rem; }
+  #reconcile-report .rejected-row { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div id="login-box">
+  <h1>WOD Admin Login</h1>
+  <input type="password" id="password" placeholder="Admin password">
+  <button onclick="login()">Log in</button>
+  <p id="login-error" style="color: var(--red); margin-top: 0.5rem;"></p>
+</div>
+
+<div id="dashboard" class="hidden">
+  <h1>Recent Order Entries</h1>
+  <p style="color: var(--muted);">Orders using code WOD are approved automatically on submission and count immediately — this keeps the site/bot responsive. That "approved" status is provisional though: it's only confirmed for real once you run Weekly Reconciliation below, right before the Friday draw. You can still manually reject/re-approve individual entries here any time.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Firm</th>
+        <th>Order Number</th>
+        <th>Status</th>
+        <th>Submitted</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="entries-body"></tbody>
+  </table>
+  <p id="entries-toggle-wrap" class="hidden" style="margin-top: 0.75rem;">
+    <button class="secondary" id="entries-toggle-btn" onclick="toggleEntriesView()"></button>
+  </p>
+  <p id="status-msg"></p>
+
+  <h1 style="margin-top: 3rem;">This Week's Draw Pool <span id="week-key" style="color: var(--muted); font-size: 1rem; font-weight: 400;"></span></h1>
+  <p style="color: var(--muted);">Resets every Saturday. Orders count as soon as they're submitted. This is what you draw from every Friday.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Free</th>
+        <th>Orders</th>
+        <th>Referrals</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="weekly-body"></tbody>
+  </table>
+  <p id="weekly-toggle-wrap" class="hidden" style="margin-top: 0.75rem;">
+    <button class="secondary" id="weekly-toggle-btn" onclick="toggleWeeklyView()"></button>
+  </p>
+
+  <div class="panel">
+    <h2>Weekly Reconciliation</h2>
+    <p class="sub">Run this once a week, right before the Friday draw. Upload that week's CSV exports from Lucid + Tradeify, punch in AlphaFutures orders manually, then click Reconcile — anything submitted this week that doesn't match a real record gets pulled out of the draw pool automatically (referral bonuses that depended on a fake order get pulled too).</p>
+
+    <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem;">1. Upload CSVs</h3>
+    <div class="upload-row">
+      <label>Lucid Trading</label>
+      <input type="file" id="csv-lucid" accept=".csv">
+      <button onclick="uploadCsv('lucidtrading', 'csv-lucid')">Upload</button>
+    </div>
+    <div class="upload-row">
+      <label>Tradeify</label>
+      <input type="file" id="csv-tradeify" accept=".csv">
+      <button onclick="uploadCsv('tradeify', 'csv-tradeify')">Upload</button>
+    </div>
+    <p id="csv-upload-status" style="color: var(--muted); font-size: 0.85rem;"></p>
+
+    <h3 style="font-size: 0.95rem; margin: 1.5rem 0 0.5rem;">2. AlphaFutures — manual entry (no CSV export)</h3>
+    <div id="alpha-rows">
+      <div class="manual-row">
+        <input type="text" placeholder="Order ID" class="alpha-order-number" style="max-width: 200px;">
+        <input type="date" class="alpha-order-date" style="max-width: 160px;">
+      </div>
+    </div>
+    <button class="secondary" onclick="addAlphaRow()">+ Add row</button>
+    <button onclick="submitAlphaRows()">Save AlphaFutures rows</button>
+    <p id="alpha-status" style="color: var(--muted); font-size: 0.85rem;"></p>
+
+    <h3 style="font-size: 0.95rem; margin: 1.5rem 0 0.5rem;">3. Reconcile this week</h3>
+    <button class="big" onclick="runReconcile()">Run Weekly Reconciliation</button>
+    <div id="reconcile-report"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Draw Winners</h2>
+    <p class="sub">Run this after reconciliation, right before the Friday announcement. Pick how many winners, draw, and re-roll as many times as you want — nothing is saved or posted until you hit Confirm &amp; Announce. Each entry is an equal-odds ticket, so someone with more entries has a proportionally better shot.</p>
+
+    <div class="manual-row">
+      <label style="min-width: 110px; font-weight: 600;">Winners</label>
+      <input type="number" id="draw-count" min="1" value="1" style="max-width: 100px;">
+      <button onclick="runDraw()">Draw Winners</button>
+      <button class="secondary" id="reroll-btn" onclick="runDraw()" style="display: none;">Re-roll</button>
+    </div>
+    <p id="draw-status" style="color: var(--muted); font-size: 0.85rem;"></p>
+
+    <div id="draw-preview" class="hidden" style="margin-top: 1rem;">
+      <table>
+        <thead>
+          <tr><th>User</th><th>Winning Entry</th><th>Total Entries This Week</th></tr>
+        </thead>
+        <tbody id="draw-preview-body"></tbody>
+      </table>
+      <button class="big" style="margin-top: 1rem; background: var(--green);" onclick="confirmAndAnnounce()">Confirm &amp; Announce in Discord</button>
+      <p id="draw-confirm-status" style="color: var(--muted); font-size: 0.85rem;"></p>
+    </div>
+
+    <h3 style="font-size: 0.95rem; margin: 1.5rem 0 0.5rem;">Recent draws</h3>
+    <div id="recent-draws"></div>
+  </div>
+</div>
+
+<script>
+  async function login() {
+    const password = document.getElementById('password').value;
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    if (res.ok) {
+      document.getElementById('login-box').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      loadEntries();
+      loadWeeklySummary();
+      loadRecentDraws();
+    } else {
+      document.getElementById('login-error').textContent = 'Incorrect password.';
+    }
+  }
+
+  // Recent Order Entries only shows the top 10 by default — same
+  // show-more pattern as the draw pool table below. Fetches up to the
+  // API's max (200) so "show all" actually has everything to expand to.
+  let recentEntries = [];
+  let entriesExpanded = false;
+  const ENTRIES_PAGE_SIZE = 10;
+
+  async function loadEntries() {
+    const res = await fetch('/api/admin/entries/recent-orders?limit=200');
+    if (!res.ok) return;
+    const { entries } = await res.json();
+    recentEntries = entries;
+    entriesExpanded = false;
+    renderEntriesBody();
+  }
+
+  function renderEntriesBody() {
+    const body = document.getElementById('entries-body');
+    const toggleWrap = document.getElementById('entries-toggle-wrap');
+    const toggleBtn = document.getElementById('entries-toggle-btn');
+    body.innerHTML = '';
+    if (recentEntries.length === 0) {
+      body.innerHTML = '<tr><td colspan="6" style="color: var(--muted);">No order entries yet.</td></tr>';
+      toggleWrap.classList.add('hidden');
+      return;
+    }
+    const visible = entriesExpanded ? recentEntries : recentEntries.slice(0, ENTRIES_PAGE_SIZE);
+    visible.forEach(e => {
+      const tr = document.createElement('tr');
+      const statusColor = e.verification_status === 'approved' ? 'var(--green)'
+        : e.verification_status === 'rejected' ? 'var(--red)' : 'var(--muted)';
+      tr.innerHTML = `
+        <td>${e.discord_username}</td>
+        <td>${e.prop_firm}</td>
+        <td><span class="order-number">${e.order_number}</span></td>
+        <td style="color: ${statusColor}; text-transform: capitalize;">${e.verification_status}</td>
+        <td>${e.created_at}</td>
+        <td>
+          ${e.verification_status !== 'rejected' ? `<button class="reject" onclick="reject(${e.id})">Reject</button>` : ''}
+          ${e.verification_status === 'rejected' ? `<button onclick="approve(${e.id})">Re-approve</button>` : ''}
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+
+    if (recentEntries.length > ENTRIES_PAGE_SIZE) {
+      toggleWrap.classList.remove('hidden');
+      toggleBtn.textContent = entriesExpanded ? 'Show top 10 only' : `Show all ${recentEntries.length} ▾`;
+    } else {
+      toggleWrap.classList.add('hidden');
+    }
+  }
+
+  function toggleEntriesView() {
+    entriesExpanded = !entriesExpanded;
+    renderEntriesBody();
+  }
+
+  async function approve(id) {
+    await fetch(`/api/admin/entries/${id}/approve`, { method: 'POST' });
+    document.getElementById('status-msg').textContent = `Entry #${id} approved.`;
+    loadEntries();
+    loadWeeklySummary();
+  }
+
+  async function reject(id) {
+    const reason = prompt('Reason for rejecting (order number doesn\'t match, code WOD wasn\'t used, etc.):') || '';
+    await fetch(`/api/admin/entries/${id}/reject`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    });
+    document.getElementById('status-msg').textContent = `Entry #${id} rejected and removed from the draw pool.`;
+    loadEntries();
+    loadWeeklySummary();
+  }
+
+  // Draw pool table only shows the top 10 by default (it's a draw pool,
+  // not a leaderboard — order doesn't matter, this is just to keep the
+  // panel from getting huge on a busy week). The toggle button below it
+  // expands to the full list on demand.
+  let weeklyUsers = [];
+  let weeklyExpanded = false;
+  const WEEKLY_PAGE_SIZE = 10;
+
+  async function loadWeeklySummary() {
+    const res = await fetch('/api/admin/weekly-summary');
+    if (!res.ok) return;
+    const { week_key, users } = await res.json();
+    document.getElementById('week-key').textContent = `(week of ${week_key})`;
+    weeklyUsers = users;
+    weeklyExpanded = false;
+    renderWeeklyBody();
+  }
+
+  function renderWeeklyBody() {
+    const body = document.getElementById('weekly-body');
+    const toggleWrap = document.getElementById('weekly-toggle-wrap');
+    const toggleBtn = document.getElementById('weekly-toggle-btn');
+    body.innerHTML = '';
+    if (weeklyUsers.length === 0) {
+      body.innerHTML = '<tr><td colspan="5" style="color: var(--muted);">No entries yet this week.</td></tr>';
+      toggleWrap.classList.add('hidden');
+      return;
+    }
+    const visible = weeklyExpanded ? weeklyUsers : weeklyUsers.slice(0, WEEKLY_PAGE_SIZE);
+    visible.forEach(u => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${u.discord_username}</td>
+        <td>${u.base_entries}</td>
+        <td>${u.order_entries}</td>
+        <td>${u.referral_entries}</td>
+        <td><strong>${u.total_entries}</strong></td>
+      `;
+      body.appendChild(tr);
+    });
+
+    if (weeklyUsers.length > WEEKLY_PAGE_SIZE) {
+      toggleWrap.classList.remove('hidden');
+      toggleBtn.textContent = weeklyExpanded ? 'Show top 10 only' : `Show all ${weeklyUsers.length} ▾`;
+    } else {
+      toggleWrap.classList.add('hidden');
+    }
+  }
+
+  function toggleWeeklyView() {
+    weeklyExpanded = !weeklyExpanded;
+    renderWeeklyBody();
+  }
+
+  // ---------------- Weekly Reconciliation ----------------
+
+  async function uploadCsv(firm, inputId) {
+    const input = document.getElementById(inputId);
+    const statusEl = document.getElementById('csv-upload-status');
+    if (!input.files.length) {
+      statusEl.textContent = 'Choose a CSV file first.';
+      return;
+    }
+    const formData = new FormData();
+    formData.append('firm', firm);
+    formData.append('file', input.files[0]);
+
+    statusEl.textContent = `Uploading ${firm}...`;
+    try {
+      const res = await fetch('/api/admin/verified-orders/import-csv', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'upload failed');
+      statusEl.textContent = `${firm}: ${data.imported} orders loaded (${data.excluded} excluded by status, ${data.unparsed} rows unparsed) out of ${data.total_rows} rows.`;
+    } catch (err) {
+      statusEl.textContent = `Error uploading ${firm}: ${err.message}`;
+    }
+  }
+
+  function addAlphaRow() {
+    const container = document.getElementById('alpha-rows');
+    const row = document.createElement('div');
+    row.className = 'manual-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Order ID" class="alpha-order-number" style="max-width: 200px;">
+      <input type="date" class="alpha-order-date" style="max-width: 160px;">
+    `;
+    container.appendChild(row);
+  }
+
+  async function submitAlphaRows() {
+    const numbers = document.querySelectorAll('.alpha-order-number');
+    const dates = document.querySelectorAll('.alpha-order-date');
+    const records = [];
+    numbers.forEach((el, i) => {
+      const order_number = el.value.trim();
+      const order_date = dates[i].value;
+      if (order_number && order_date) records.push({ order_number, order_date });
+    });
+
+    const statusEl = document.getElementById('alpha-status');
+    if (records.length === 0) {
+      statusEl.textContent = 'Fill in at least one order ID + date.';
+      return;
+    }
+
+    statusEl.textContent = 'Saving...';
+    try {
+      const res = await fetch('/api/admin/verified-orders/manual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ records })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'save failed');
+      statusEl.textContent = `Saved ${data.imported} AlphaFutures orders (${data.unparsed} rows skipped, missing ID or date).`;
+    } catch (err) {
+      statusEl.textContent = `Error: ${err.message}`;
+    }
+  }
+
+  async function runReconcile() {
+    const reportEl = document.getElementById('reconcile-report');
+    reportEl.innerHTML = '<p style="color: var(--muted);">Reconciling...</p>';
+    try {
+      const res = await fetch('/api/admin/reconcile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'reconcile failed');
+
+      let html = `<p class="summary">Week of ${data.week_key}: checked ${data.checked}, confirmed <strong style="color: var(--green);">${data.confirmed}</strong>, rejected <strong style="color: var(--red);">${data.rejected}</strong>.</p>`;
+      const rejectedRows = data.details.filter(d => d.result === 'rejected');
+      if (rejectedRows.length > 0) {
+        html += '<table><thead><tr><th>User</th><th>Firm</th><th>Order Number</th><th>Referral bonus also pulled?</th></tr></thead><tbody>';
+        rejectedRows.forEach(d => {
+          html += `<tr class="rejected-row"><td>${d.discord_username}</td><td>${d.prop_firm}</td><td><span class="order-number">${d.order_number}</span></td><td>${d.cascade_referral_rejected ? 'Yes' : 'No'}</td></tr>`;
+        });
+        html += '</tbody></table>';
+      }
+      reportEl.innerHTML = html;
+
+      // Refresh the entries/draw-pool views since reconcile may have changed statuses
+      loadEntries();
+      loadWeeklySummary();
+    } catch (err) {
+      reportEl.innerHTML = `<p style="color: var(--red);">Error: ${err.message}</p>`;
+    }
+  }
+
+  // ---------------- Draw Winners ----------------
+  // Two-step: runDraw() just previews (nothing saved) — call it again
+  // (via the Re-roll button) as many times as you want. Only
+  // confirmAndAnnounce() actually saves anything or posts to Discord,
+  // and it posts exactly the winners currently on screen.
+  let currentDrawWinners = [];
+
+  function winningEntryLabel(w) {
+    if (w.winning_entry_type === 'base') return 'Free entry';
+    if (w.winning_entry_source === 'referral') return 'Referral entry';
+    return 'Order entry';
+  }
+
+  async function runDraw() {
+    const count = parseInt(document.getElementById('draw-count').value, 10);
+    const statusEl = document.getElementById('draw-status');
+    if (!count || count < 1) {
+      statusEl.textContent = 'Enter how many winners to draw first.';
+      return;
+    }
+
+    statusEl.textContent = 'Drawing...';
+    document.getElementById('draw-confirm-status').textContent = '';
+    try {
+      const res = await fetch('/api/admin/draw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'draw failed');
+
+      currentDrawWinners = data.winners;
+
+      if (data.winners.length === 0) {
+        statusEl.textContent = `No approved entries in the pool for week ${data.week_key} yet.`;
+        document.getElementById('draw-preview').classList.add('hidden');
+        document.getElementById('reroll-btn').style.display = 'none';
+        return;
+      }
+
+      let note = `${data.winners.length} winner${data.winners.length === 1 ? '' : 's'} drawn from ${data.total_entries} entries across ${data.eligible_users} eligible users (week of ${data.week_key}).`;
+      if (data.requested_count > data.eligible_users) {
+        note += ` Only ${data.eligible_users} eligible user${data.eligible_users === 1 ? '' : 's'} — drew the max possible instead of ${data.requested_count}.`;
+      }
+      statusEl.textContent = note;
+
+      const body = document.getElementById('draw-preview-body');
+      body.innerHTML = data.winners.map(w => `
+        <tr>
+          <td>${w.discord_username}</td>
+          <td>${winningEntryLabel(w)}</td>
+          <td>${w.total_entries_this_week}</td>
+        </tr>
+      `).join('');
+      document.getElementById('draw-preview').classList.remove('hidden');
+      document.getElementById('reroll-btn').style.display = 'inline-block';
+    } catch (err) {
+      statusEl.textContent = `Error: ${err.message}`;
+    }
+  }
+
+  async function confirmAndAnnounce() {
+    const statusEl = document.getElementById('draw-confirm-status');
+    if (!currentDrawWinners.length) {
+      statusEl.textContent = 'Draw winners first.';
+      return;
+    }
+    if (!confirm(`Post this week's ${currentDrawWinners.length} winner(s) to Discord? This can't be undone.`)) return;
+
+    statusEl.textContent = 'Saving and posting to Discord...';
+    try {
+      const res = await fetch('/api/admin/draw/announce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ winners: currentDrawWinners })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'announce failed');
+
+      statusEl.textContent = data.discord_posted
+        ? 'Saved and posted to Discord ✓'
+        : `Saved, but the Discord post failed: ${data.discord_error || 'unknown error'}. You can post it manually.`;
+      statusEl.style.color = data.discord_posted ? 'var(--green)' : 'var(--red)';
+
+      currentDrawWinners = [];
+      document.getElementById('reroll-btn').style.display = 'none';
+      loadRecentDraws();
+    } catch (err) {
+      statusEl.textContent = `Error: ${err.message}`;
+      statusEl.style.color = 'var(--red)';
+    }
+  }
+
+  async function loadRecentDraws() {
+    const res = await fetch('/api/admin/draws/recent');
+    if (!res.ok) return;
+    const { draws } = await res.json();
+    const container = document.getElementById('recent-draws');
+    if (draws.length === 0) {
+      container.innerHTML = '<p style="color: var(--muted); font-size: 0.85rem;">No draws yet.</p>';
+      return;
+    }
+    container.innerHTML = draws.map(d => `
+      <div style="border-bottom: 1px solid var(--border); padding: 0.6rem 0; font-size: 0.85rem;">
+        <strong>Week of ${d.draw_date}</strong> — ${d.winners.length} winner${d.winners.length === 1 ? '' : 's'} (${d.total_entries_in_draw} entries in pool)
+        <div style="color: var(--muted);">${d.winners.map(w => w.discord_username).join(', ')}</div>
+      </div>
+    `).join('');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "wod-giveaway-backend",
+  "version": "1.0.0",
+  "description": "WOD giveaway platform — Discord/YouTube auth, order verification, admin panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch-path=server.js --watch-path=routes --watch-path=lib --watch-path=admin --watch-path=db/db.js --watch-path=db/schema.sql server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "csv-parse": "^5.6.0",
+    "discord.js": "^14.27.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^2.0.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

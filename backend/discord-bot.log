@@ -1,0 +1,4 @@
+✅ Bot logged in as WOD Order Verifier#2237
+(node:29768) DeprecationWarning: The ready event has been renamed to clientReady to distinguish it from the gateway READY event and will only emit under that name in v15. Please use clientReady instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅ Slash commands registered
