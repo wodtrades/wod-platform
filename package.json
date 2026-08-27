@@ -1,0 +1,13 @@
+{
+  "name": "wod-platform",
+  "version": "1.0.0",
+  "description": "WOD Giveaway Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "postinstall": "cd backend && npm install"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
