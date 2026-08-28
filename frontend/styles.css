@@ -637,7 +637,7 @@ section {
   right: 0;
   background-color: var(--bg-panel);
   border-bottom: 1px solid var(--border);
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 0;
   max-height: 0;
@@ -672,6 +672,7 @@ section {
   .picks-grid, .prizes-grid, .grid-3 { grid-template-columns: 1fr; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
+  .mobile-menu { display: flex; }
   .countdown-timer { gap: 0.85rem; }
   .countdown-value { font-size: 1.5rem; }
 }
