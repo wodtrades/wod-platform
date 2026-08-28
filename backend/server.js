@@ -187,6 +187,38 @@ app.get('/join', (req, res) => {
   res.redirect(ref ? `/auth/discord?ref=${encodeURIComponent(ref)}` : '/auth/discord');
 });
 
+// Sitemap for Google Search Console indexing
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://wodtrades.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://wodtrades.com/leaderboard</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://wodtrades.com/giveaways</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wodtrades.com/prop-firms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wodtrades.com/referral</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>`);
+});
+
 // --- Weekly free-entry sweep ---
 // Everyone verified in Discord is supposed to get 1 free entry every
 // giveaway week automatically, not just when they happen to visit the
