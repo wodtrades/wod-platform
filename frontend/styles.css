@@ -637,7 +637,7 @@ section {
   right: 0;
   background-color: var(--bg-panel);
   border-bottom: 1px solid var(--border);
-  display: none;
+  display: none !important;
   flex-direction: column;
   gap: 0;
   max-height: 0;
@@ -647,6 +647,7 @@ section {
 }
 
 .mobile-menu.active {
+  display: flex !important;
   max-height: 500px;
 }
 
@@ -672,7 +673,7 @@ section {
   .picks-grid, .prizes-grid, .grid-3 { grid-template-columns: 1fr; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .mobile-menu { display: flex; }
+  .mobile-menu { display: flex !important; }
   .countdown-timer { gap: 0.85rem; }
   .countdown-value { font-size: 1.5rem; }
 }
