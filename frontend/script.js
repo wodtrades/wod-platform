@@ -99,4 +99,42 @@ async function loadDiscordMemberCount() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', loadDiscordMemberCount);
+// Mobile hamburger menu toggle
+function initHamburgerMenu() {
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (!hamburgerBtn || !mobileMenu) return;
+
+  // Toggle menu when hamburger is clicked
+  hamburgerBtn.addEventListener('click', () => {
+    hamburgerBtn.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+    hamburgerBtn.setAttribute('aria-expanded',
+      hamburgerBtn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+    );
+  });
+
+  // Close menu when a link is clicked
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburgerBtn.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav')) {
+      hamburgerBtn.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadDiscordMemberCount();
+  initHamburgerMenu();
+});
