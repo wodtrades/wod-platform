@@ -25,13 +25,24 @@ async function loadBoard() {
     body.innerHTML = '<tr><td colspan="3" class="muted">No entries yet this week — be the first.</td></tr>';
     return;
   }
-  body.innerHTML = data.leaderboard.map((row, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td>${row.discord_username}</td>
-      <td>${row.total_entries}</td>
-    </tr>
-  `).join('');
+
+  // Medal emojis for top 3
+  const medals = ['👑', '🥈', '🥉'];
+
+  body.innerHTML = data.leaderboard.map((row, i) => {
+    const rank = i + 1;
+    const medal = rank <= 3 ? medals[rank - 1] : rank;
+    return `
+      <tr>
+        <td>${medal}</td>
+        <td>${row.discord_username}</td>
+        <td>${row.total_entries}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // Store leaderboard data for user rank display
+  window.leaderboardData = data.leaderboard;
 }
 
 // Turns a "YYYY-MM-DD" week_key into "August 22, 2026". Built from the
@@ -59,6 +70,9 @@ async function loadDash() {
   }
   document.getElementById('dash-orders').textContent = ordersText;
   document.getElementById('dash-total').textContent = data.summary.total_entries;
+
+  // Show user's rank
+  showUserRank(data.summary.total_entries);
 }
 
 async function refreshStatus() {
@@ -122,4 +136,28 @@ function renderEntriesTable() {
 function toggleEntriesView() {
   entriesState.expanded = !entriesState.expanded;
   renderEntriesTable();
+}
+
+// Calculate user's rank based on their total entries
+function showUserRank(userTotalEntries) {
+  if (!window.leaderboardData || !window.leaderboardData.length) {
+    return;
+  }
+
+  // Find user's rank by counting how many have more entries
+  let userRank = 1;
+  for (const row of window.leaderboardData) {
+    if (row.total_entries > userTotalEntries) {
+      userRank++;
+    }
+  }
+
+  // Show the rank section and populate it
+  const rankSection = document.getElementById('your-rank-section');
+  const rankNumber = document.getElementById('user-rank-number');
+  const rankEntries = document.getElementById('user-rank-entries');
+
+  rankSection.classList.remove('hidden');
+  rankNumber.textContent = `#${userRank}`;
+  rankEntries.textContent = userTotalEntries;
 }
