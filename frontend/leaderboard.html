@@ -87,17 +87,14 @@
   </table>
 
   <!-- User's rank (shown to logged-in users) -->
-  <div id="your-rank-section" class="hidden" style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-panel-raised); border-radius: var(--radius); text-align: center;">
-    <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">YOUR RANK</h3>
-    <div style="display: flex; justify-content: center; gap: 2rem; align-items: center;">
-      <div>
-        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-gold);" id="user-rank-number">—</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">Position</div>
-      </div>
-      <div>
-        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-gold);" id="user-rank-entries">—</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">Entries</div>
-      </div>
+  <div id="your-rank-section" class="hidden" style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-panel-raised); border-radius: var(--radius); display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">YOUR RANK</div>
+      <div style="font-size: 2rem; font-weight: 700; color: var(--accent-gold);" id="user-rank-number">—</div>
+    </div>
+    <div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Your Entries</div>
+      <div style="font-size: 2rem; font-weight: 700; color: var(--accent-gold);" id="user-rank-entries">—</div>
     </div>
   </div>
 </section>
