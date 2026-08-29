@@ -26,15 +26,23 @@ async function loadBoard() {
     return;
   }
 
-  // Medal emojis for top 3
-  const medals = ['👑', '🥈', '🥉'];
-
   body.innerHTML = data.leaderboard.map((row, i) => {
     const rank = i + 1;
-    const medal = rank <= 3 ? medals[rank - 1] : rank;
+    let rankCell = '';
+
+    if (rank === 1) {
+      rankCell = `<span class="rank-badge rank-1">${rank}</span>`;
+    } else if (rank === 2) {
+      rankCell = `<span class="rank-badge rank-2">${rank}</span>`;
+    } else if (rank === 3) {
+      rankCell = `<span class="rank-badge rank-3">${rank}</span>`;
+    } else {
+      rankCell = rank;
+    }
+
     return `
       <tr>
-        <td>${medal}</td>
+        <td>${rankCell}</td>
         <td>${row.discord_username}</td>
         <td>${row.total_entries}</td>
       </tr>
