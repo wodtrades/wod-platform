@@ -678,24 +678,33 @@ section {
   .countdown-value { font-size: 1.5rem; }
 }
 
-/* Leaderboard rank crowns */
-.rank-crown {
-  font-size: 1.8rem;
-  display: inline-block;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+/* Leaderboard rank badges */
+.rank-badge {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  padding: 0 4px;
 }
 
-.rank-crown.rank-1 {
-  color: #FFD700;
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+.rank-badge.rank-1 {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #000;
+  box-shadow: 0 1px 4px rgba(255, 215, 0, 0.3);
 }
 
-.rank-crown.rank-2 {
-  color: #C0C0C0;
-  text-shadow: 0 0 8px rgba(192, 192, 192, 0.4);
+.rank-badge.rank-2 {
+  background: linear-gradient(135deg, #C0C0C0, #808080);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(192, 192, 192, 0.3);
 }
 
-.rank-crown.rank-3 {
-  color: #CD7F32;
-  text-shadow: 0 0 8px rgba(205, 127, 50, 0.4);
+.rank-badge.rank-3 {
+  background: linear-gradient(135deg, #CD7F32, #8B4513);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(205, 127, 50, 0.3);
 }

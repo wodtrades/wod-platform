@@ -31,11 +31,11 @@ async function loadBoard() {
     let rankCell = '';
 
     if (rank === 1) {
-      rankCell = `<span class="rank-crown rank-1">♔</span>`;
+      rankCell = `<span class="rank-badge rank-1">${rank}</span>`;
     } else if (rank === 2) {
-      rankCell = `<span class="rank-crown rank-2">♔</span>`;
+      rankCell = `<span class="rank-badge rank-2">${rank}</span>`;
     } else if (rank === 3) {
-      rankCell = `<span class="rank-crown rank-3">♔</span>`;
+      rankCell = `<span class="rank-badge rank-3">${rank}</span>`;
     } else {
       rankCell = rank;
     }
