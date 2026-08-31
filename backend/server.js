@@ -148,6 +148,10 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // Clean URLs for static pages
+app.get('/one-on-one', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'one-on-one.html'));
+});
+
 app.get('/giveaways', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'giveaways.html'));
 });
@@ -204,6 +208,11 @@ app.get('/sitemap.xml', (req, res) => {
   <url>
     <loc>https://wodtrades.com/giveaways</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wodtrades.com/one-on-one</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
