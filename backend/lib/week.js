@@ -91,6 +91,40 @@ function getWeekKey(date = new Date()) {
   return d.toISOString().slice(0, 10);
 }
 
+// getWeekKey() intentionally rolls forward the instant it's Friday 11am
+// ET, so brand-new activity (someone joining Discord Friday afternoon,
+// say) is attributed to the upcoming week's pool instead of a week
+// that's already been drawn. That's correct for STAMPING new entries.
+//
+// But that same instantaneous flip is wrong as the DEFAULT week for
+// admins/visitors *viewing* things (leaderboard, weekly summary, draw
+// pool, draw, draw/announce) — nobody looks at 11:00:00.000 sharp, they
+// look a few minutes (sometimes longer) after, and by then getWeekKey()
+// has already rolled to the brand-new, still-empty week. That's exactly
+// what happened live on 2026-09-04: the draw was attempted a few minutes
+// after 11am ET and got routed to the empty 2026-09-05 pool instead of
+// the just-finished 2026-08-29 one, and the public leaderboard showed
+// "no entries this week" for the same reason.
+//
+// This gives "what week should I default to showing" callers a grace
+// window: from Friday 11:00 AM ET until Saturday 00:00 ET (i.e. the rest
+// of that Friday), the default stays on the week that JUST locked,
+// instead of jumping ahead to the new, empty one. Once Saturday actually
+// arrives, the new week is genuinely underway (people are earning fresh
+// entries), so it becomes the default like normal. Callers can always
+// override with an explicit week param to look at other weeks — this
+// only changes what "no param given" resolves to.
+function getCurrentDrawWeekKey(date = new Date()) {
+  const et = getEasternParts(date);
+  if (et.weekday === 5 && et.hour >= 11) {
+    const d = new Date(Date.UTC(et.year, et.month - 1, et.day));
+    const daysSinceSaturday = (et.weekday + 1) % 7; // Friday -> 6 days back
+    d.setUTCDate(d.getUTCDate() - daysSinceSaturday);
+    return d.toISOString().slice(0, 10);
+  }
+  return getWeekKey(date);
+}
+
 // Returns { start, end } Date objects (real UTC instants) for a given
 // week_key: start = that Saturday 00:00 ET, end = the following Friday
 // 11:00 AM ET (the draw moment), exclusive.
@@ -110,4 +144,4 @@ function getWeekRange(weekKey) {
   return { start, end };
 }
 
-module.exports = { getWeekKey, getWeekRange };
+module.exports = { getWeekKey, getCurrentDrawWeekKey, getWeekRange };

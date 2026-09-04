@@ -2,7 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 const db = require('../db/db');
-const { getWeekKey } = require('../lib/week');
+const { getWeekKey, getCurrentDrawWeekKey } = require('../lib/week');
 
 function requireLogin(req, res, next) {
   if (!req.user) return res.status(401).json({ error: 'not logged in' });
@@ -328,9 +328,13 @@ router.get('/dashboard', requireLogin, (req, res) => {
   });
 });
 
-// Public leaderboard — this week's approved entries only, top 10.
+// Public leaderboard — this week's approved entries only, top 10. Uses
+// getCurrentDrawWeekKey() (not raw getWeekKey()) so that during the
+// Friday-11am-to-midnight-ET grace window, visitors still see the week
+// that just locked instead of an abruptly emptied brand-new week — see
+// lib/week.js for the full explanation.
 router.get('/leaderboard', (req, res) => {
-  const weekKey = getWeekKey();
+  const weekKey = getCurrentDrawWeekKey();
   const rows = db.prepare(`
     SELECT users.discord_username, COUNT(*) AS total_entries
     FROM entries

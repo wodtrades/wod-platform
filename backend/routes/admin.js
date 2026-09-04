@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { parse: parseCsv } = require('csv-parse/sync');
 const router = express.Router();
 const db = require('../db/db');
-const { getWeekKey } = require('../lib/week');
+const { getWeekKey, getCurrentDrawWeekKey } = require('../lib/week');
 const { postToDiscordChannel } = require('../lib/discord');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
@@ -116,7 +116,7 @@ router.get('/draw-pool/:firm', requireAdmin, (req, res) => {
 // this is what you actually draw from every Friday. Only counts
 // approved entries (pending order submissions aren't in the pool yet).
 router.get('/weekly-summary', requireAdmin, (req, res) => {
-  const weekKey = req.query.week || getWeekKey();
+  const weekKey = req.query.week || getCurrentDrawWeekKey();
 
   const rows = db.prepare(`
     SELECT
@@ -206,7 +206,7 @@ function drawWinners(weekKey, requestedCount) {
 }
 
 router.post('/draw', requireAdmin, (req, res) => {
-  const weekKey = (req.body && req.body.week) || getWeekKey();
+  const weekKey = (req.body && req.body.week) || getCurrentDrawWeekKey();
   const requestedCount = parseInt(req.body && req.body.count, 10);
   if (!requestedCount || requestedCount < 1) {
     return res.status(400).json({ error: 'count must be a positive integer' });
@@ -252,7 +252,7 @@ function buildWinnersAnnouncement(winners) {
 // should be exactly what a /draw call returned, unmodified.
 router.post('/draw/announce', requireAdmin, async (req, res) => {
   const { winners } = req.body || {};
-  const weekKey = (req.body && req.body.week) || getWeekKey();
+  const weekKey = (req.body && req.body.week) || getCurrentDrawWeekKey();
 
   if (!Array.isArray(winners) || winners.length === 0) {
     return res.status(400).json({ error: 'winners must be a non-empty array — run a draw first' });
@@ -481,7 +481,7 @@ router.get('/verified-orders', requireAdmin, (req, res) => {
 // THE reconciliation pass. Run this after uploading the week's CSVs
 // (+ manual AlphaFutures entries), right before drawing winners.
 router.post('/reconcile', requireAdmin, (req, res) => {
-  const weekKey = (req.body && req.body.week) || getWeekKey();
+  const weekKey = (req.body && req.body.week) || getCurrentDrawWeekKey();
 
   const orderEntries = db.prepare(`
     SELECT entries.*, users.discord_username
