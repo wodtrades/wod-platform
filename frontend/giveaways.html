@@ -19,6 +19,8 @@
 <meta name="twitter:title" content="Enter the Giveaway | WOD">
 <meta name="twitter:description" content="Enter WOD's giveaway — join the Discord, follow everywhere for a free entry, or buy an eval with code WOD for a bonus entry.">
 <meta name="twitter:image" content="https://wodtrades.com/assets/wods-og-image.png">
+<link rel="icon" type="image/png" href="/assets/wods-og-image.png">
+<link rel="apple-touch-icon" href="/assets/wods-og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -34,10 +36,9 @@
     </a>
     <nav class="nav-links">
       <a href="/one-on-one">1 on 1</a>
+      <a href="/premium">Premium</a>
       <a href="/prop-firms">Prop Firms</a>
       <a href="/giveaways" class="active">Giveaways</a>
-      <a href="/referral">Referral</a>
-      <a href="/leaderboard">Leaderboard</a>
     </nav>
     <!-- Mobile hamburger menu button -->
     <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
@@ -53,10 +54,9 @@
   <!-- Mobile menu overlay (slides in from left) -->
   <nav class="mobile-menu" id="mobileMenu">
     <a href="/one-on-one">1 on 1</a>
+    <a href="/premium">Premium</a>
     <a href="/prop-firms">Prop Firms</a>
     <a href="/giveaways">Giveaways</a>
-    <a href="/referral">Referral</a>
-    <a href="/leaderboard">Leaderboard</a>
   </nav>
 </header>
 
@@ -77,19 +77,7 @@
       <div class="steps-row">
         <div class="step">
           <span class="step-num">1</span>
-          <span class="step-label">Free entry for joining <b>Discord</b></span>
-        </div>
-        <div class="step">
-          <span class="step-num">2</span>
-          <span class="step-label">Buy an account with code <b>WOD</b></span>
-        </div>
-        <div class="step">
-          <span class="step-num">3</span>
-          <span class="step-label">Log your order number</span>
-        </div>
-        <div class="step">
-          <span class="step-num">4</span>
-          <span class="step-label">You're in the giveaway</span>
+          <span class="step-label">JOIN the FREE <b>Discord</b></span>
         </div>
       </div>
       <p style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted); text-align: center;">No purchase necessary to enter or win. <a href="/giveaway-rules" style="color: var(--accent-gold); text-decoration: underline;">See Official Rules</a></p>
@@ -107,56 +95,6 @@
       Connect Discord for <strong>free entry</strong>.
     </div>
     <a href="/auth/discord" target="_blank" rel="noopener" class="btn promo-cta">Connect Discord</a>
-  </div>
-</section>
-
-<!-- ============ BONUS ENTRIES: ORDER SUBMISSION ============
-     Visible to everyone (like Timmy's "log a purchase to enter" list) —
-     browsing/expanding a row doesn't require login, only actually
-     submitting does. If you're not logged in yet, hitting Submit will
-     surface a "connect Discord first" message instead of silently
-     failing. -->
-<section class="entry-section">
-  <h2>Log your order number</h2>
-  <p class="section-sub">Bought an eval with code <strong style="color: #fff;">WOD</strong>? Tap a firm to drop your order number in for a bonus entry — manually verified.</p>
-
-  <div class="order-list">
-    <div class="order-row" id="order-lucidtrading" data-firm="lucidtrading">
-      <button type="button" class="order-row-header" onclick="toggleOrderRow(this)">
-        <img src="assets/lucid-logo.webp" alt="Lucid Trading">
-        <span class="pick-name">Lucid Trading</span>
-        <svg class="order-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <div class="order-expand">
-        <input type="text" placeholder="Order number" class="order-input">
-        <button class="btn promo-cta btn-sm" onclick="submitOrder('lucidtrading', this)">Submit</button>
-        <span class="order-status"></span>
-      </div>
-    </div>
-    <div class="order-row" id="order-tradeify" data-firm="tradeify">
-      <button type="button" class="order-row-header" onclick="toggleOrderRow(this)">
-        <img src="assets/tradeify-logo.jpg" alt="Tradeify">
-        <span class="pick-name">Tradeify</span>
-        <svg class="order-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <div class="order-expand">
-        <input type="text" placeholder="Order number" class="order-input">
-        <button class="btn promo-cta btn-sm" onclick="submitOrder('tradeify', this)">Submit</button>
-        <span class="order-status"></span>
-      </div>
-    </div>
-    <div class="order-row" id="order-alphafutures" data-firm="alphafutures">
-      <button type="button" class="order-row-header" onclick="toggleOrderRow(this)">
-        <img src="assets/alphafutures-logo.jpg" alt="Alpha Futures">
-        <span class="pick-name">Alpha Futures</span>
-        <svg class="order-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <div class="order-expand">
-        <input type="text" placeholder="Order number" class="order-input">
-        <button class="btn promo-cta btn-sm" onclick="submitOrder('alphafutures', this)">Submit</button>
-        <span class="order-status"></span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -217,21 +155,6 @@
 
   <div class="promo-widget">
 
-    <div class="promo-card">
-      <div class="promo-body">
-        <div class="promo-logos" aria-hidden="true">
-          <img src="assets/lucid-logo.webp" alt="">
-          <img src="assets/tradeify-logo.jpg" alt="">
-          <img src="assets/alphafutures-logo.jpg" alt="">
-        </div>
-        <div class="promo-text">
-          <h3>Enter before it's too late!</h3>
-          <p>Every account bought with code <span class="promo-code">WOD</span> earns you an extra entry in the giveaways.</p>
-        </div>
-        <a href="/prop-firms" class="btn promo-cta">Enter NOW <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-
     <div class="promo-card promo-card-row">
       <div class="promo-discord-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
@@ -245,9 +168,6 @@
 
   </div>
 </section>
-
-<!-- Your Entries breakdown (detailed history) still lives on /leaderboard,
-     alongside the public leaderboard — see leaderboard.html. -->
 
 <!-- ============ THIS WEEK'S PRIZES (recap, matches homepage) ============ -->
 <section class="giveaway">
@@ -284,12 +204,7 @@
 
   <details class="faq-item">
     <summary>How can I enter?</summary>
-    <p>You automatically receive your free entry by joining the Discord. You can stack additional entries through qualifying purchases with code <strong style="color: #fff;">WOD</strong>.</p>
-  </details>
-
-  <details class="faq-item">
-    <summary>Is there a limit to my entries?</summary>
-    <p>No. There's no limit to how many entries you can earn. The more qualifying entries you collect, the more chances you have to win.</p>
+    <p>Join the free discord to get your entry into my weekly giveaways</p>
   </details>
 
   <details class="faq-item">

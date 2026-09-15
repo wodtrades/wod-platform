@@ -152,20 +152,16 @@ app.get('/one-on-one', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'one-on-one.html'));
 });
 
+app.get('/premium', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'premium.html'));
+});
+
 app.get('/giveaways', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'giveaways.html'));
 });
 
 app.get('/prop-firms', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'prop-firms.html'));
-});
-
-app.get('/referral', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'referral.html'));
-});
-
-app.get('/leaderboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'leaderboard.html'));
 });
 
 app.get('/terms', (req, res) => {
@@ -201,13 +197,13 @@ app.get('/sitemap.xml', (req, res) => {
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://wodtrades.com/leaderboard</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://wodtrades.com/giveaways</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://wodtrades.com/giveaways</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://wodtrades.com/prop-firms</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -216,13 +212,8 @@ app.get('/sitemap.xml', (req, res) => {
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://wodtrades.com/prop-firms</loc>
+    <loc>https://wodtrades.com/premium</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://wodtrades.com/referral</loc>
-    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>`);
