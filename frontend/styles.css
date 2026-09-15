@@ -348,6 +348,12 @@ section {
   margin-bottom: 1.5rem;
 }
 
+/* 4th firm card (FundedNext) sits alone on row 2 — center it under the
+   middle card instead of defaulting to the grid's left column. */
+.picks-grid .pick-card-fundednext {
+  grid-column: 2;
+}
+
 .pick-card-image {
   position: relative;
   border-radius: var(--radius);
@@ -671,6 +677,7 @@ section {
 @media (max-width: 860px) {
   .feature-grid { grid-template-columns: repeat(2, 1fr); }
   .picks-grid, .prizes-grid, .grid-3 { grid-template-columns: 1fr; }
+  .picks-grid .pick-card-fundednext { grid-column: 1; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
   .mobile-menu { display: flex !important; }
